@@ -1,0 +1,251 @@
+{% load static tailwind_tags %}<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<title>EdFor</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+		<link
+			href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+			rel="stylesheet" />
+		<link
+			rel="stylesheet"
+			href="{% static 'css/style.css' %}" />
+		{% tailwind_css %}
+	</head>
+	<body class="bg-gray-200">
+		{% include 'includes/teacher_sidebar.html' %}
+		<div class="p-4 sm:ml-64">
+			<div class="p4 mt-16">
+				{% if user.is_authenticated %}
+				<p class="text-black font-light text-lg">
+					Hello
+					<b>{{user.first_name}}</b>
+					, add Class to your Students now
+				</p>
+				{% endif %}
+
+				<!-- Modal toggle -->
+				<div class="flex flex-row items-center">
+					<button
+						data-modal-target="default-modal"
+						data-modal-toggle="default-modal"
+						class="block mr-3 mt-4 text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+						type="button">
+						<i
+							class="fa fa-plus-circle"
+							aria-hidden="true"></i>
+						Add Class
+					</button>
+					{% for message in messages%} {% if message.level_tag == 'success' %}
+					<p class="text-center text-green-600 font-bold mt-4 text-md">{{message}}</p>
+					{% else %}
+					<p class="text-center text-red-600 font-bold mt-4 text-md">{{message}}</p>
+					{%endif%} {% endfor %}
+				</div>
+
+				<div class="mt-14 flex flex-row justify-evenly flex-wrap">
+					{% for items in classroom %}
+					<div class="max-w-sm bg-white border my-4 border-gray-200 rounded-lg shadow">
+						<div class="relative">
+							<img
+								class="rounded-t-lg"
+								src="{% static 'img/bg.png' %}"
+								draggable="false"
+								alt="" />
+							<div class="absolute top-40 right-4 bg-orange-700 p-2 px-3 sm:px-4 sm:p-4 rounded-full">
+								<i
+									class="fa fa-user-circle text-2xl sm:text-5xl text-white"
+									aria-hidden="true"></i>
+							</div>
+							<div class="absolute top-4 right-4">
+								<a
+									href="{% url 'deleteClassroom' items.id %}"
+									class="text-white hover:scale-110 duration-300 bg-red-600 py-1.5 px-3 rounded-xl">
+									<i
+										class="fa fa-trash"
+										aria-hidden="true"></i>
+									Remove
+								</a>
+							</div>
+						</div>
+
+						<div class="p-5">
+							<a href="#">
+								<h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 z-50">
+									{{items.class_name}} - {{items.subject}}
+								</h5>
+							</a>
+							<p class="mb-3 font-normal text-gray-700">
+								Students enrolled:
+								<b>{{items.students.count}}</b>
+							</p>
+							<p class="mb-3 font-normal text-gray-700">
+								Class Code
+								<b>{{items.room_code}}</b>
+							</p>
+							<div>
+								<a
+									href="{% url 'classroom' items.room_code %}"
+									class="inline-flex items-center text-white px-3 py-2 text-sm font-medium text-center bg-orange-700 rounded-lg hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300">
+									Visit
+									<i
+										class="fa fa-arrow-right ml-2"
+										aria-hidden="true"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+				<!-- Main modal -->
+				<div
+					id="default-modal"
+					tabindex="-1"
+					aria-hidden="true"
+					class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+					<div class="relative p-4 w-full max-w-2xl max-h-full">
+						<!-- Modal content -->
+						<div class="relative bg-white rounded-lg shadow">
+							<!-- Modal header -->
+							<div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+								<h3 class="text-xl font-semibold text-orange-900">Create Classroom</h3>
+								<button
+									type="button"
+									class="text-orange-400 bg-transparent hover:bg-orange-200 hover:text-orange-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+									data-modal-hide="default-modal">
+									<svg
+										class="w-3 h-3"
+										aria-hidden="true"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 14 14">
+										<path
+											stroke="currentColor"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+									</svg>
+									<span class="sr-only">Close modal</span>
+								</button>
+							</div>
+							<form
+								class="max-full mx-auto"
+								method="POST"
+								enctype="multipart/form-data">
+								{% csrf_token %}
+								<!-- Modal body -->
+								<div class="p-4 md:p-5 space-y-4">
+									<div class="mb-5">
+										<label
+											for="class"
+											class="block mb-2 text-sm font-medium text-gray-900">
+											Your class
+										</label>
+										<input
+											type="text"
+											id="class"
+											name="class_name"
+											class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5 placeholder-gray-400 shadow-sm-light"
+											placeholder=" "
+											required />
+									</div>
+									<div class="mb-5">
+										<label
+											for="section"
+											class="block mb-2 text-sm font-medium text-gray-900">
+											Section
+										</label>
+										<input
+											type="text"
+											id="section"
+											name="section"
+											class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5 placeholder-gray-400 shadow-sm-light"
+											placeholder=" "
+											required />
+									</div>
+									<div class="mb-5">
+										<label
+											for="subject"
+											class="block mb-2 text-sm font-medium text-gray-900">
+											Subject
+										</label>
+										<input
+											type="text"
+											id="subject"
+											name="subject"
+											class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5 placeholder-gray-400 shadow-sm-light"
+											placeholder=" "
+											required />
+									</div>
+
+									<div class="mb-5">
+										<label
+											for="subject"
+											class="block mb-2 text-sm font-medium text-gray-900">
+											Room Code
+										</label>
+										<input
+											type="hidden"
+											id="room_code_hidden"
+											name="room_code"
+											class="w-full" />
+										<input
+											type="text"
+											id="room_code"
+											name="display"
+											class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5 placeholder-gray-400 shadow-sm-light"
+											disabled />
+										<span class="text-xs font-bold text-orange-800">
+											This room code will be the access key to the class. Make sure to give this room code to your
+											students
+										</span>
+									</div>
+								</div>
+								<!-- Modal footer -->
+								<div class="flex items-center p-4 md:p-5 border-t border-orange-200 rounded-b">
+									<button
+										type="submit"
+										name="submit"
+										class="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+										<i
+											class="fa fa-plus"
+											aria-hidden="true"></i>
+										Create
+									</button>
+									<button
+										data-modal-hide="default-modal"
+										type="button"
+										class="py-2.5 px-5 ms-3 text-sm font-medium text-orange-900 focus:outline-none bg-white rounded-lg border border-orange-200 hover:bg-orange-100 hover:text-orange-700 focus:z-10 focus:ring-4 focus:ring-orange-100">
+										Cancel
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			function generateRoomCode() {
+				var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+				var result = "";
+				var charactersLength = characters.length;
+				for (var i = 0; i < 25; i++) {
+					result += characters.charAt(Math.floor(Math.random() * charactersLength));
+				}
+				document.getElementById("room_code").value = result;
+				document.getElementById("room_code_hidden").value = result;
+			}
+
+			// Call the function to generate room code when the page loads
+			generateRoomCode();
+		</script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+	</body>
+</html>

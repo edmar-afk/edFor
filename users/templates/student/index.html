@@ -1,0 +1,200 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<title>EdFor</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+		<link
+			href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+			rel="stylesheet" />
+		<link
+			rel="stylesheet"
+			href="{% static 'css/style.css' %}" />
+		{% tailwind_css %}
+	</head>
+	<body class="bg-gray-200">
+		{% include 'includes/student_sidebar.html' %}
+		<div class="p-4 sm:ml-64">
+			<div class="p4 mt-16">
+				{% if user.is_authenticated %}
+				<p class="text-black font-light text-lg">
+					Welcome
+					<b>{{user.first_name}}</b>
+					, enroll to your classes now.
+				</p>
+				{% endif %}
+
+				<!-- Modal toggle -->
+				<div class="flex flex-row items-center">
+					<button
+						data-modal-target="default-modal"
+						data-modal-toggle="default-modal"
+						class="block mr-3 mt-4 text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+						type="button">
+						<i
+							class="fa fa-plus-circle"
+							aria-hidden="true"></i>
+						Join Class
+					</button>
+					{% for message in messages%} {% if message.level_tag == 'success' %}
+					<p class="text-center text-green-600 font-bold mt-4 text-md">{{message}}</p>
+					{% else %}
+					<p class="text-center text-red-600 font-bold mt-4 text-md">{{message}}</p>
+					{%endif%} {% endfor %}
+				</div>
+
+				<div class="mt-14 flex flex-col items-center justify-center">
+					<h1 class="text-xl font-bold">Search Results</h1>
+
+					{% for classroom in classrooms %}
+
+					<div class="max-w-3xl mt-4 mb-14 bg-white border border-gray-200 rounded-lg shadow">
+						<a href="#">
+							<img
+								class="rounded-t-lg"
+								src="{% static 'img/bg.png' %}"
+								alt="" />
+						</a>
+						<div class="p-5">
+							<a href="#">
+								<h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+									{{classroom.class_name}} - {{classroom.section}}
+								</h5>
+							</a>
+							<p class="mb-3 font-normal text-gray-700">{{classroom.subject}}</p>
+							<p class="mb-3 font-normal text-gray-700">
+								<b>
+									<i
+										class="fa fa-user-circle"
+										aria-hidden="true"></i>
+									Instructor:
+								</b>
+								{{classroom.instructor.first_name}}
+							</p>
+							<a
+								href="{% url 'student_dashboard' %}?classroom_id={{ classroom.id }}&room_code={{ classroom.room_code }}"
+								class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-orange-700 rounded-lg hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300">
+								Join
+								<svg
+									class="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+									aria-hidden="true"
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 14 10">
+									<path
+										stroke="currentColor"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M1 5h12m0 0L9 1m4 4L9 9" />
+								</svg>
+							</a>
+						</div>
+					</div>
+
+					{% empty %}
+					<p>No classrooms found.</p>
+					{% endfor %}
+				</div>
+				<!-- Main modal -->
+				<div
+					id="default-modal"
+					tabindex="-1"
+					aria-hidden="true"
+					class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+					<div class="relative p-4 w-full max-w-2xl max-h-full">
+						<!-- Modal content -->
+						<div class="relative bg-white rounded-lg shadow">
+							<!-- Modal header -->
+							<div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+								<h3 class="text-xl font-semibold text-orange-900">Search Class</h3>
+								<button
+									type="button"
+									class="text-orange-400 bg-transparent hover:bg-orange-200 hover:text-orange-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+									data-modal-hide="default-modal">
+									<svg
+										class="w-3 h-3"
+										aria-hidden="true"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 14 14">
+										<path
+											stroke="currentColor"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+									</svg>
+									<span class="sr-only">Close modal</span>
+								</button>
+							</div>
+
+							<form
+								class="flex items-center max-full mx-auto px-4 py-8"
+								action="{% url 'student_dashboard' %}"
+								method="GET">
+								<label
+									for="voice-search"
+									class="sr-only">
+									Search
+								</label>
+								<div class="relative w-full">
+									<div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+										<i class="fas fa-door-open text-orange-600"></i>
+									</div>
+									<input
+										type="text"
+										id="search"
+										name="search"
+										class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full ps-10 p-2.5"
+										placeholder="Input room code here"
+										required />
+								</div>
+								<button
+									type="submit"
+									class="inline-flex items-center py-2.5 px-3 ms-2 text-sm font-medium text-white bg-orange-700 rounded-lg border border-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800">
+									<svg
+										class="w-4 h-4 me-2"
+										aria-hidden="true"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 20 20">
+										<path
+											stroke="currentColor"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+									</svg>
+									Search
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			function generateRoomCode() {
+				var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+				var result = "";
+				var charactersLength = characters.length;
+				for (var i = 0; i < 25; i++) {
+					result += characters.charAt(Math.floor(Math.random() * charactersLength));
+				}
+				document.getElementById("room_code").value = result;
+				document.getElementById("room_code_hidden").value = result;
+			}
+
+			// Call the function to generate room code when the page loads
+			generateRoomCode();
+		</script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+	</body>
+</html>

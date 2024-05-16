@@ -1,0 +1,94 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+		<link
+			href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+			rel="stylesheet" />
+		<link
+			rel="stylesheet"
+			href="{% static 'css/style.css' %}" />
+		{% tailwind_css %}
+	</head>
+	<body class="bg">
+		<section class="bg-white/60 h-full">
+			<br />
+			<br />
+			<center>
+				<a
+					href="{% url 'homepage' %}"
+					class="text-center font-bold">
+					<i
+						class="fa fa-home"
+						aria-hidden="true"></i>
+					Back to Home
+				</a>
+			</center>
+			<div class="gap-16 items-center py-8 px-4 mx-auto max-w-screen-xl lg:grid lg:grid-cols-2 lg:py-16 lg:px-6">
+				<div class="font-light text-gray-800 sm:text-lg">
+					<h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-800">Angelyn S. Calubag - Developer</h2>
+					<p class="mb-4">
+						<b>Address:</b>
+						Ignacio Garrata, Dinas, ZDS
+						<br />
+						<b>Birthdate:</b>
+						August 10, 2001
+						<br />
+						<b>Sex:</b>
+						Female
+						<br />
+						<b>Program:</b>
+						Bachelor of Science in Information Technology
+						<br />
+						<b>School:</b>
+						J. H. Cerilles State College
+						<br />
+						<b>Gmail:</b>
+						Angelyncalubag10@gmail.com
+						<br />
+					</p>
+					<p class="mt-4">
+						References:
+						<br />
+						<a
+							href="https://www.educate-me.co/"
+							target="_blank"
+							class="text-xl font-bold text-orange-600 mt-4">
+							EducateMe
+						</a>
+					</p>
+					<br />
+					<br />
+					<p class="font-bold">About the Page</p>
+					<br />
+					<p>
+						INHS G-Class stands for Iponan National High School G-Class, wherein this is an innovative educational
+						program designed to nurture excellence, critical thinking, and holistic development among its students.We
+						learn lots of different things in a fun way, not just from books. Our teachers are awesome and they help us
+						understand everything really well. We also get to do fun activities and help out in our community.The
+						G-Class helps us become better at working together and finding what we're passionate about
+					</p>
+				</div>
+				<div class="grid grid-cols-2 gap-4 mt-8">
+					<img
+						class="w-full rounded-lg"
+						src="{% static 'img/me.jpg' %}"
+						alt="office content 1" />
+					<img
+						class="mt-4 w-full lg:mt-10 rounded-lg"
+						src="{% static 'img/bg.png' %}"
+						alt="office content 2" />
+				</div>
+			</div>
+		</section>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+	</body>
+</html>

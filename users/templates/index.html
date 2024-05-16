@@ -1,0 +1,120 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+		<link
+			href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+			rel="stylesheet" />
+		<link
+			rel="stylesheet"
+			href="{% static 'css/style.css' %}" />
+		{% tailwind_css %}
+	</head>
+	<body class="bg">
+		<div class="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-32 bg-transparent">
+			<div class="grid md:grid-cols-2 gap-4 md:gap-8 xl:gap-20 md:items-center">
+				<div>
+					<h1 class="block text-3xl font-bold text-white sm:text-4xl lg:text-6xl lg:leading-tight">
+						Welcome to
+						<br />
+						<span class="text-orange-600">INSH EdFor</span>
+					</h1>
+					<p class="text-white font-bold">DISCLAIMER</p>
+					<p class="text-white">
+						This website is intended for educational purposes only. The information provided on this site is for general
+						informational purposes and is not intended to constitute professional advice. This website may contain
+						educational content that reflects personal opinions, experiences, or interpretations. Such content is
+						provided for educational purposes only and should not be considered as professional advice or relied upon
+						for making decisions. By using this website, you acknowledge that you have read, understood, and agree to be
+						bound by the terms of this disclaimer. And is not intended to constitute professional advice. This website
+						may contain educational content that reflects personal opinions, experiences, or interpretations. Such
+						content is provided for educational purposes only and should not be considered as professional advice or
+						relied upon for making decisions. By using this website, you acknowledge that you have read, understood, and
+						agree to be bound by the terms of this disclaimer.
+					</p>
+					<br />
+
+					<a
+						href="{% url 'about' %}"
+						class="text-black bg-orange-200 hover:scale-110 duration-300 hover:bg-orange-700 hover:text-white py-1.5 px-5 mt-14 rounded-lg font-bold text-xl">
+						<i
+							class="fa fa-question-circle"
+							aria-hidden="true"></i>
+						About
+					</a>
+				</div>
+
+				<div class="relative mx-2">
+					<form
+						method="POST"
+						enctype="multipart/form-data"
+						class="max-w-lg mx-auto mt-12 bg-gradient-to-bl from-orange-200/50 via-orange-100/30 to-orange-50/20 p-6 rounded-xl">
+						{% csrf_token %}
+
+						<p class="text-center font-bold text-xl mb-8 text-white">You can Login here</p>
+
+						{% for message in messages%} {% if message.level_tag == 'success' %}
+						<p class="text-center text-green-400 font-bold mt-4 mb-4 text-md">{{message}}</p>
+						{% else %}
+						<p class="text-center text-red-400 font-bold mt-4 mb-4 text-md">{{message}}</p>
+						{%endif%} {% endfor %}
+						<div class="mb-5">
+							<label
+								for="email"
+								class="block mb-2 text-sm font-medium text-white">
+								Your email
+							</label>
+							<input
+								type="email"
+								id="email"
+								name="email"
+								class="bg-gray-50 border border-gray-300 text-white text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
+								placeholder="jay@gmail.com"
+								required />
+						</div>
+						<div class="mb-5">
+							<label
+								for="password"
+								class="block mb-2 text-sm font-medium text-white">
+								Your password
+							</label>
+							<input
+								type="password"
+								id="password"
+								name="password"
+								class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
+								required />
+						</div>
+
+						<div class="flex flex-row items-center">
+							<button
+								type="submit"
+								class="text-white bg-orange-600 duration-300 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
+								Login
+							</button>
+							<span class="mx-2 text-white">or</span>
+							<a
+								href="{% url 'register' %}"
+								class="text-orange-500 border-2 duration-300 hover:text-white border-orange-600 hover:bg-orange-500 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
+								<i
+									class="fa fa-user-plus mr-1"
+									aria-hidden="true"></i>
+								Register
+							</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+	</body>
+</html>

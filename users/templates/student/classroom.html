@@ -1,0 +1,94 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<title>EdFor</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+		<link
+			href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+			rel="stylesheet" />
+		<link
+			rel="stylesheet"
+			href="{% static 'css/style.css' %}" />
+		{% tailwind_css %}
+	</head>
+	<body class="bg-gray-200">
+		{% include 'includes/student_sidebar.html' %}
+		<div class="p-4 sm:ml-64">
+			<div class="p4 mt-16">
+				{% if user.is_authenticated %}
+				<p class="text-black font-light text-lg">
+					Hello
+					<b>{{user.first_name}}</b>
+					, interact to your classes now
+				</p>
+				{% endif %}
+
+				<!-- Modal toggle -->
+				<div class="flex flex-row items-center">
+					{% for message in messages%} {% if message.level_tag == 'success' %}
+					<p class="text-center text-green-600 font-bold mt-4 text-md">{{message}}</p>
+					{% else %}
+					<p class="text-center text-red-600 font-bold mt-4 text-md">{{message}}</p>
+					{%endif%} {% endfor %}
+				</div>
+
+				<div class="mt-14 flex flex-row justify-evenly flex-wrap">
+					{% for items in classroom %}
+					<div class="max-w-sm bg-white border my-4 border-gray-200 rounded-lg shadow">
+						<div class="relative">
+							<img
+								class="rounded-t-lg"
+								src="{% static 'img/bg.png' %}"
+								draggable="false"
+								alt="" />
+							<div class="absolute top-40 right-4 bg-orange-700 p-2 px-3 sm:px-4 sm:p-4 rounded-full">
+								<i
+									class="fa fa-user-circle text-2xl sm:text-5xl text-white"
+									aria-hidden="true"></i>
+							</div>
+							<div class="absolute top-4 right-4">
+								<p class="text-white hover:scale-110 duration-300 bg-orange-600 py-1.5 px-3 rounded-xl">
+									<i class="fa fa-user-circle" aria-hidden="true"></i>
+									{{items.instructor.first_name}}
+								</p>
+							</div>
+						</div>
+
+						<div class="p-5">
+							<a href="#">
+								<h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 z-50">
+									{{items.class_name}} - {{items.subject}}
+								</h5>
+							</a>
+							<p class="mb-3 font-normal text-gray-700">
+								Students who enrolled:
+								<b>{{items.students.count}}</b>
+							</p>
+
+							<div>
+								<a
+									href="{% url 'student_room' items.room_code %}"
+									class="inline-flex items-center text-white px-3 py-2 text-sm font-medium text-center bg-orange-700 rounded-lg hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300">
+									Visit
+									<i
+										class="fa fa-arrow-right ml-2"
+										aria-hidden="true"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+	</body>
+</html>
